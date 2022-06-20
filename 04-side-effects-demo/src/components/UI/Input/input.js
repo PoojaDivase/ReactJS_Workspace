@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import classes from './Input.module.css'
 
 const Input = (props) => {
+
+    //ref hook
+    const inputRef = useRef();
+
+    useEffect(() => {
+        inputRef.current.focus();
+    }, []);
 
     return (
         <div
@@ -11,6 +18,7 @@ const Input = (props) => {
         >
             <label htmlFor={props.id}>{props.label}</label>
             <input
+                ref={inputRef}
                 type={props.type}
                 id={props.id}
                 value={props.value}
