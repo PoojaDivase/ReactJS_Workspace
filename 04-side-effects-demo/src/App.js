@@ -3,19 +3,20 @@ import './App.css';
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import MainHeader from './components/MainHeader/MainHeader';
+import AuthContext from './store/AuthContext';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
   //to avoid infinite loop
   //executed after every component re-evaluation
   useEffect(() => {
     const storedUserLoggedInformation = localStorage.getItem('isLoggedIn');
 
-    if(storedUserLoggedInformation === '1'){
+    if (storedUserLoggedInformation === '1') {
       setIsLoggedIn(true);
     }
-  },[]);
+  }, []);
 
   const loginHandler = (email, password) => {
     // We should of course check email and password
@@ -31,14 +32,20 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  //all childern of App.js compnent have access to AuthContext.Provider
+  //Authcontext.provider is used as a wrapping component
   return (
-    <React.Fragment>
-      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
-      <main>
-        {!isLoggedIn && <Login onLogin={loginHandler} />}
-        {isLoggedIn && <Home onLogout={logoutHandler} />}
-      </main>
-    </React.Fragment>
+    //<React.Fragment>
+      <AuthContext.Provider value={{
+        isLoggedIn: isLoggedIn,      
+    }}>
+        <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+        <main>
+          {!isLoggedIn && <Login onLogin={loginHandler} />}
+          {isLoggedIn && <Home onLogout={logoutHandler} />}
+        </main>
+      </AuthContext.Provider>
+    //</React.Fragment>
   );
 }
 
