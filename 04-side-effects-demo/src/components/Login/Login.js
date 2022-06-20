@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+import AuthContext from '../../store/AuthContext';
 
 const emailReducer = (state, action) => {
     if (action.type === "USER_INPUT") {
@@ -42,6 +43,8 @@ const Login = (props) => {
         isValid: false,
     });
 
+    //auth context
+    const authContext = useContext(AuthContext);
 
     //getting called every time => no dependency array
     //empty [] ==> ran once 
@@ -108,7 +111,7 @@ const Login = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        props.onLogin(emailState.value, passwordState.value);
+        authContext.onLogin(emailState.value, passwordState.value);
     };
 
     return (
