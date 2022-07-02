@@ -2,24 +2,27 @@ import { useRef, useState } from "react";
 
 const SimpleInput = (props) => {
 
-  const nameInputRef = useRef();
+  //const nameInputRef = useRef();
   const [enteredName, setEnteredName] = useState("");
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  //const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
 
   const nameInputChangeHandler = event => {
     setEnteredName(event.target.value);
-    if (event.target.value.trim() !== "") {
+    /*if (event.target.value.trim() !== "") {
       setEnteredNameIsValid(true)
-    }
+    }*/
   }
 
   const nameInputBlurHandler = (event) => {
     setEnteredNameTouched(true);
-    if (enteredName.trim() === "") {
+    /*if (enteredName.trim() === "") {
       console.log("Name is EMPTY")
       setEnteredNameIsValid(false)
-    }
+    }*/
   }
 
   const formSubmissionHandler = (event) => {
@@ -29,20 +32,18 @@ const SimpleInput = (props) => {
 
     if (enteredName.trim() === "") {
       console.log("Name is EMPTY")
-      setEnteredNameIsValid(false)
       return;
     }
-    setEnteredNameIsValid(true);
     console.log("Name: ", enteredName);
     setEnteredName("");
+    setEnteredNameTouched(false);
 
     //if we want to use value once then useRef is good- no need to update state
-    const enteredValue = nameInputRef.current.value;//ref is obj with current property
+    /*const enteredValue = nameInputRef.current.value;//ref is obj with current property
     console.log("Name Ref : ", enteredValue);
     nameInputRef.current.value = ""; //NOT IDEAL, DONT manipulate the DOM
+    */
   }
-
-  const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
   const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
 
   return (
@@ -50,7 +51,7 @@ const SimpleInput = (props) => {
       <div className={nameInputClasses}>
         <label htmlFor='name'>Your Name</label>
         <input
-          ref={nameInputRef}
+         // ref={nameInputRef}
           type='text'
           id='name'
           onChange={nameInputChangeHandler}
