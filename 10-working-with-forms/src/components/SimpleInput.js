@@ -7,10 +7,15 @@ const SimpleInput = (props) => {
   //const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
   //const [formIsValid, setFormIsValid] = useState(false);
+  const [enteredEmail, setEnteredEmail] = useState("");
+  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
   const enteredNameIsValid = enteredName.trim() !== "";
   const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
-  let formIsValid = enteredNameIsValid ? true : false;
+
+  const enteredEmailIsValid = enteredEmail.trim() !== "";
+  const emailInputIsInvalid = (!enteredEmailIsValid && enteredEmailTouched);
+  let formIsValid = enteredNameIsValid && enteredEmailIsValid ? true : false;
 
   /*useEffect(() => {
     enteredNameIsValid ? setFormIsValid(true) : setFormIsValid(false);
@@ -31,6 +36,14 @@ const SimpleInput = (props) => {
     }*/
   }
 
+  const emailInputChangeHandler = event => {
+    setEnteredEmail(event.target.value)
+  }
+
+  const emailInputBlurHandler = event => {
+    setEnteredEmailTouched(true);
+  }
+
   const formSubmissionHandler = (event) => {
     event.preventDefault(); // no server - so we dont want http server call here- avoiding default behaviour
 
@@ -44,6 +57,8 @@ const SimpleInput = (props) => {
     setEnteredName("");
     setEnteredNameTouched(false);
 
+    setEnteredEmail("");
+    setEnteredEmailTouched(false);
     //if we want to use value once then useRef is good- no need to update state
     /*const enteredValue = nameInputRef.current.value;//ref is obj with current property
     console.log("Name Ref : ", enteredValue);
@@ -51,6 +66,7 @@ const SimpleInput = (props) => {
     */
   }
   const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
+  const emailInputClasses = emailInputIsInvalid ? "form-control invalid" : "form-control";
 
   return (
     <form onSubmit={formSubmissionHandler}>
@@ -63,8 +79,21 @@ const SimpleInput = (props) => {
           onChange={nameInputChangeHandler}
           onBlur={nameInputBlurHandler}
           value={enteredName} />
+          {nameInputIsInvalid && <p className="error-text">Name Must not be EMPTY</p>}
       </div>
-      {nameInputIsInvalid && <p className="error-text">Name Must not be EMPTY</p>}
+
+      <div className={emailInputClasses}>
+        <label htmlFor='email'>Your Email</label>
+        <input
+          // ref={nameInputRef}
+          type='text'
+          id='email'
+          onChange={emailInputChangeHandler}
+          onBlur={emailInputBlurHandler}
+          value={enteredEmail} />
+          {emailInputIsInvalid && <p className="error-text">Email Must not be EMPTY</p>}
+      </div>
+      
       <div className="form-actions">
         <button disabled={!formIsValid}>Submit</button>
       </div>
