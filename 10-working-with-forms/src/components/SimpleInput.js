@@ -1,17 +1,28 @@
 import { useEffect, useRef, useState } from "react";
+import useInput from "../hooks/useInput";
 
 const SimpleInput = (props) => {
 
+  const {
+    value:enteredName, 
+    isValid: enteredNameIsValid,
+    hasError : nameInputHasError, 
+    valueChangeHandler: nameChangeHandler, 
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput
+  } = useInput(value => value.trim() !== "");
+  
+  
   //const nameInputRef = useRef();
-  const [enteredName, setEnteredName] = useState("");
+ // const [enteredName, setEnteredName] = useState("");
   //const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  //const [enteredNameTouched, setEnteredNameTouched] = useState(false);
   //const [formIsValid, setFormIsValid] = useState(false);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
+  // const enteredNameIsValid = enteredName.trim() !== "";
+  // const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
 
   const enteredEmailIsValid = enteredEmail.trim() !== "";
   const emailInputIsInvalid = (!enteredEmailIsValid && enteredEmailTouched);
@@ -22,14 +33,14 @@ const SimpleInput = (props) => {
   },[enteredNameIsValid]);*/
 
   const nameInputChangeHandler = event => {
-    setEnteredName(event.target.value);
+    //setEnteredName(event.target.value);
     /*if (event.target.value.trim() !== "") {
       setEnteredNameIsValid(true)
     }*/
   }
 
   const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
+    //setEnteredNameTouched(true);
     /*if (enteredName.trim() === "") {
       console.log("Name is EMPTY")
       setEnteredNameIsValid(false)
@@ -44,18 +55,20 @@ const SimpleInput = (props) => {
     setEnteredEmailTouched(true);
   }
 
+
   const formSubmissionHandler = (event) => {
     event.preventDefault(); // no server - so we dont want http server call here- avoiding default behaviour
 
-    setEnteredNameTouched(true); //if form is submitted all inputs are touched
+   // setEnteredNameTouched(true); //if form is submitted all inputs are touched
 
     if (enteredName.trim() === "") {
       console.log("Name is EMPTY")
       return;
     }
     console.log("Name: ", enteredName);
-    setEnteredName("");
-    setEnteredNameTouched(false);
+    // setEnteredName("");
+    // setEnteredNameTouched(false);
+    resetNameInput();
 
     setEnteredEmail("");
     setEnteredEmailTouched(false);
@@ -65,7 +78,8 @@ const SimpleInput = (props) => {
     nameInputRef.current.value = ""; //NOT IDEAL, DONT manipulate the DOM
     */
   }
-  const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
+ // const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
+ const nameInputClasses = nameInputHasError ? "form-control invalid" : "form-control";
   const emailInputClasses = emailInputIsInvalid ? "form-control invalid" : "form-control";
 
   return (
@@ -76,10 +90,12 @@ const SimpleInput = (props) => {
           // ref={nameInputRef}
           type='text'
           id='name'
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
+          // onChange={nameInputChangeHandler}
+          // onBlur={nameInputBlurHandler}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
           value={enteredName} />
-          {nameInputIsInvalid && <p className="error-text">Name Must not be EMPTY</p>}
+          {nameInputHasError && <p className="error-text">Name Must not be EMPTY</p>}
       </div>
 
       <div className={emailInputClasses}>
