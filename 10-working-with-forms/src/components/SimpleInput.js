@@ -2,40 +2,67 @@ import { useRef, useState } from "react";
 
 const SimpleInput = (props) => {
 
-    const nameInputRef = useRef();
-    const [enteredName, setEnteredName] = useState("");
+  const nameInputRef = useRef();
+  const [enteredName, setEnteredName] = useState("");
+  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
-    const nameInputChangeHandler = event => {
-        setEnteredName(event.target.value);
+  const nameInputChangeHandler = event => {
+    setEnteredName(event.target.value);
+    if (event.target.value.trim() !== "") {
+      setEnteredNameIsValid(true)
     }
+  }
 
-    const formSubmissionHandler = (event) => {
-        event.preventDefault(); // no server - so we dont want http server call here- avoiding default behaviour
-        console.log("Name: " ,enteredName);
-        setEnteredName("");
-
-        //if we want to use value once then useRef is good- no need to update state
-        const enteredValue = nameInputRef.current.value;//ref is obj with current property
-        console.log("Name Ref : ",enteredValue);
-        nameInputRef.current.value= ""; //NOT IDEAL, DONT manipulate the DOM
+  const nameInputBlurHandler = (event) => {
+    setEnteredNameTouched(true);
+    if (enteredName.trim() === "") {
+      console.log("Name is EMPTY")
+      setEnteredNameIsValid(false)
     }
+  }
 
-    return (
-      <form onSubmit={formSubmissionHandler}>
-        <div className='form-control'>
-          <label htmlFor='name'>Your Name</label>
-          <input 
-          ref={nameInputRef} 
-          type='text' 
-          id='name' 
+  const formSubmissionHandler = (event) => {
+    event.preventDefault(); // no server - so we dont want http server call here- avoiding default behaviour
+
+    setEnteredNameTouched(true); //if form is submitted all inputs are touched
+
+    if (enteredName.trim() === "") {
+      console.log("Name is EMPTY")
+      setEnteredNameIsValid(false)
+      return;
+    }
+    setEnteredNameIsValid(true);
+    console.log("Name: ", enteredName);
+    setEnteredName("");
+
+    //if we want to use value once then useRef is good- no need to update state
+    const enteredValue = nameInputRef.current.value;//ref is obj with current property
+    console.log("Name Ref : ", enteredValue);
+    nameInputRef.current.value = ""; //NOT IDEAL, DONT manipulate the DOM
+  }
+
+  const nameInputIsInvalid = (!enteredNameIsValid && enteredNameTouched);
+  const nameInputClasses = nameInputIsInvalid ? "form-control invalid" : "form-control";
+
+  return (
+    <form onSubmit={formSubmissionHandler}>
+      <div className={nameInputClasses}>
+        <label htmlFor='name'>Your Name</label>
+        <input
+          ref={nameInputRef}
+          type='text'
+          id='name'
           onChange={nameInputChangeHandler}
-          value={enteredName}/>
-        </div>
-        <div className="form-actions">
-          <button>Submit</button>
-        </div>
-      </form>
-    );
-  };
-  
-  export default SimpleInput;
+          onBlur={nameInputBlurHandler}
+          value={enteredName} />
+      </div>
+      {nameInputIsInvalid && <p className="error-text">Name Must not be EMPTY</p>}
+      <div className="form-actions">
+        <button>Submit</button>
+      </div>
+    </form>
+  );
+};
+
+export default SimpleInput;
