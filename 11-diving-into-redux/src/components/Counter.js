@@ -6,9 +6,9 @@ import classes from './Counter.module.css';
 const Counter = () => {
     
     //useStore and useSelector 
-    const counter = useSelector(state => state.counter);
+    const counter = useSelector(state => state.counter.counter);
     const dispatch = useDispatch(); //dispatch function -> call to dispatch action against redux store
-    const showCounter = useSelector(state => state.showCounter);
+    const showCounter = useSelector(state => state.counter.showCounter);
 
     const toggleCounterHandler = () => {
         //dispatch({type : 'toggle'});
