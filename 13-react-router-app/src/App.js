@@ -1,13 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route } from 'react-router-dom';
+
+import Welcome from './pages/Welcome';
+import Products from './pages/Products';
 
 function App() {
   return (
-    <p>Lets get Started</p>
+    <div>
+      <h2>The Home Page</h2>
+      <Route path="/welcome">
+        <Welcome />
+      </Route>
+      <Route path="/products">
+        <Products />
+      </Route>
+    </div>
   );
 }
 
 export default App;
 
-//our-domain.com/ => Component A
-//our-domain.com/products => Component A
+// our-domain.com/welcome => Welcome Component
+// our-domain.com/products => Products Component
