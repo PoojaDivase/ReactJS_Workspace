@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import NewToDo from './components/NewToDo';
+import Todos from './components/Todos';
+import Todo from './models/todo';
 
 function App() {
+
+  //let itemsList =['Learn React', 'Learn Typescript']; 
+  //const todos = [new Todo('Learn React'), new Todo('Learn TypeScript')];
+  const [todosList, setTodosList] = useState<Todo[]>([]);
+
+  const onAddToDoHandler = (todoText : any) =>{
+    const todo= new Todo(todoText);
+    setTodosList((prevState) => {
+      return prevState.concat(todo);
+    })
+  }
+
+  const onRemoveToDoHandler = (id: string) => {
+    setTodosList((prevState) => {
+      return prevState.filter(todo => todo.id !== id);
+    }) 
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+      <NewToDo onAddToDo={onAddToDoHandler}/>
+      <Todos items={todosList} onRemoveToDo={onRemoveToDoHandler} />
     </div>
   );
 }
 
 export default App;
+//npx create-react-app 19-react-app-typescript --template typescript
